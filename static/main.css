@@ -1,0 +1,86 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #212121;
+    height: 100vh;
+    display: flex;
+}
+#container {
+    margin: auto;
+	width: 490px;
+    height: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 10px;
+    perspective: 1000px;
+}
+
+.card {
+    position: relative;
+    width: calc(25% - 10px);
+    margin: 5px;
+    transform-style: preserve-3d;
+    transition: all 0.5s ease;
+}
+
+.matched {
+    position: relative;
+    width: calc(25% - 10px);
+    margin: 5px;
+    transform-style: preserve-3d;
+    transition: all 0.5s ease;
+}
+
+.card:active {
+    transform: scale(.90);
+}
+
+.fliped_card {
+    transform: rotateY(180deg) !important;
+}
+
+.front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #9162e4;
+    color: #212121;
+    border-radius: 10px;
+    backface-visibility: hidden;
+}
+/* .matched > .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: teal;
+    color: #212121;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+} 
+*/
+
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #c51162;
+    color: #212121;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+}
+
+.content {
+    padding: 15%;
+    margin-top: 5px;
+	font-size: 40px;
+	text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
