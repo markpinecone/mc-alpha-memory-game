@@ -1,8 +1,6 @@
-const cards = document.querySelectorAll('.card');
-let setEventListener = cards.forEach(card => card.addEventListener('click', handleCards, false))
-
 function loader() {
-    setEventListener
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => card.addEventListener('click', handleFlipedCards, false))
 }
 
 const array = [
@@ -16,47 +14,12 @@ const array = [
   "fas fa-power-off",
 ];
 const glyphs = array.flatMap((i) => [i, i]);
+let matches = 0;
+let moves = 30;
+let gridSize = 16;
 let isFliped = false;
-let firstCard, secondCard;
-
-
-
-function handleCards(event) {
-    if (event.currentTarget.classList.contains("card")) {
-      event.currentTarget.className = "card fliped_card";
-      if (!isFliped) {
-        isFliped= true;
-        firstCard = this;
-      } else {
-        if (this != firstCard) {
-          isFliped = false;
-          secondCard = this;
-        } else {
-          console.log("Can't use same card twice");
-        }
-      }
-      if (firstCard && secondCard) {
-        //cards.forEach(card => card.addEventListener('click', handleCards, false))
-        if (firstCard.innerHTML == secondCard.innerHTML) {
-        firstCard.className = ('matched fliped_card');
-        secondCard.className = ('matched fliped_card');
-        firstCard.removeEventListener('click', handleCards);
-        secondCard.removeEventListener('click', handleCards);
-        console.log('Match Found!')
-        } else {
-          console.log('No Match Found!')
-          cards.forEach(card => card.removeEventListener('click', handleCards))
-          sleep(2000).then(() => {
-            firstCard.classList.remove('fliped_card');
-            secondCard.classList.remove('fliped_card');
-            firstCard, secondCard = undefined;
-          });
-        }
-      }
-    }
-    // console.log(isFliped, firstCard, secondCard)
-}
-
+let firstCard;
+let secondCard;
 
 shuffle(glyphs);
 console.log(glyphs);
@@ -66,8 +29,7 @@ function shuffle(array) {
 }
 
 function createGrid() {
-  let gridSize = 16;
-  let deck = document.getElementById("container");
+  let deck = document.getElementById("deck");
   for (let i = 0; i < gridSize; i++) {
     let card = document.createElement("div");
     let front = document.createElement("div");
@@ -84,6 +46,88 @@ function createGrid() {
     back.appendChild(content);
     glyph.className = glyphs[i];
     content.appendChild(glyph);
+    updateMoves();
+  }
+}
+
+function handleFlipedCards(e) {
+    if (e.currentTarget.classList.contains("card")) {
+      e.currentTarget.className = "card fliped_card";
+      if (!isFliped) {
+        isFliped= true;
+        firstCard = this;
+        removeListener(firstCard, handleFlipedCards);
+
+      } else {
+                isFliped = false;
+                secondCard = this;
+                removeListener(secondCard, handleFlipedCards);
+                gameDecisions();
+      }
+    }
+}
+
+function gameDecisions() {
+    waitForDecision("wait");
+    if (firstCard && secondCard) {
+        if (firstCard.innerHTML == secondCard.innerHTML) {
+        firstCard.className = ('matched fliped_card');
+        secondCard.className = ('matched fliped_card');
+        console.log('Match Found!')
+        waitForDecision("resume");
+        matches += 2;
+        moves -= 1;
+        updateMoves();
+        hasPlayerWon();
+        hasPlayerFailed();
+
+        } else {
+          console.log('No Match Found!')
+          sleep(2000).then(() => {
+            firstCard.classList.remove('fliped_card');
+            secondCard.classList.remove('fliped_card');
+            firstCard, secondCard = undefined;
+            waitForDecision("resume");
+            moves -= 1;
+            updateMoves();
+            hasPlayerFailed();
+          });
+        }
+      }
+}
+
+function removeListener(object, func) {
+    object.addEventListener('click', func, false);
+    console.log(`Added event listener for object ${object.innerHTML}`)
+}
+
+function addListeners(object, func) {
+    object.removeEventListener('click', func);
+    console.log(`Removed event listener for object ${object.innerHTML}`)
+}
+
+function waitForDecision(action) {
+    const cards = document.querySelectorAll('.card');
+    switch (action) {
+        case "wait":
+            cards.forEach(card => card.removeEventListener('click', handleFlipedCards, false));
+            console.log('Event listeners has been halted!')
+            break;
+        case "resume":
+            cards.forEach(card => card.addEventListener('click', handleFlipedCards, false));
+            console.log('Event listeners has been resumed!')
+    }
+}
+
+function hasPlayerWon() {
+  if (matches == gridSize) {
+      displayVictory();
+  }
+}
+
+function hasPlayerFailed() {
+  if (moves == 0) {
+      displayFailure();
   }
 }
 
@@ -92,10 +136,26 @@ function sleep (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
-function objToString(obj) {
-    let str = '';
-    for (const [p, val] of Object.entries(obj)) {
-        str += `${p}::${val}\n`;
-    }
-    return str;
+function displayVictory() {
+    document.getElementById('game-status').innerHTML = 'Well Done! &#128521'
+    reloadDocument(5000);
+}
+
+function displayFailure() {
+    const cards = document.querySelectorAll('.card');
+    document.getElementById('game-status').innerHTML = 'You Failed! &#129322'
+    let doc = document.getElementById('moves-left');
+    doc.innerHTML = '<a href="https://www.benu.lv/e-aptieka/uztura-bagatinataji/smadzenu-darbibai-un-nervu-sistemai/atminai">Need supplements for improving memory? Click here!</a>'
+    cards.forEach(card => card.removeEventListener('click', handleFlipedCards));
+    reloadDocument(6000);
+}
+
+function updateMoves() {
+  document.getElementById('moves-left').innerHTML = `Moves Left: ${moves}`
+}
+
+function reloadDocument(time) {
+  sleep(time).then(() => {
+          location.reload();
+  });
 }
