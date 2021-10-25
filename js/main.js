@@ -17,7 +17,7 @@ const array = [
 ];
 const glyphs = array.flatMap((i) => [i, i]);
 let matches = 0;
-let moves = 1;
+let moves = 25;
 let gridSize = 16;
 let isFliped = false;
 let firstCard;
