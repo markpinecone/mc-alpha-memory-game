@@ -98,12 +98,12 @@ function gameDecisions() {
 
 function removeListener(object, func) {
     object.removeEventListener('click', func);
-    console.log(`Added event listener for object ${object.innerHTML}`)
+    console.log(`Removed event listener for object ${object.innerHTML}`)
 }
 
 function addListeners(object, func) {
     object.addEventListener('click', func, false);
-    console.log(`Removed event listener for object ${object.innerHTML}`)
+    console.log(`Added event listener for object ${object.innerHTML}`)
 }
 
 function waitForDecision(action) {
