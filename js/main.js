@@ -17,7 +17,7 @@ const array = [
 ];
 const glyphs = array.flatMap((i) => [i, i]);
 let matches = 0;
-let moves = 30;
+let moves = 1;
 let gridSize = 16;
 let isFliped = false;
 let firstCard;
@@ -129,8 +129,9 @@ function hasPlayerWon() {
 function hasPlayerFailed() {
   if (moves == 0) {
       const cards = document.querySelectorAll('.card');
+      const doc = document.getElementById('moves-left');
       document.getElementById('game-status').innerHTML = 'You Failed! &#129322'
-      let doc = document.getElementById('moves-left');
+
       doc.innerHTML = '<a href="https://www.benu.lv/e-aptieka/uztura-bagatinataji/smadzenu-darbibai-un-nervu-sistemai/atminai">Need supplements for improving memory? Click here!</a>'
       cards.forEach(card => card.removeEventListener('click', handleFlipedCards));
       reloadDocument(6000);
