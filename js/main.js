@@ -111,43 +111,35 @@ function waitForDecision(action) {
     switch (action) {
         case "wait":
             cards.forEach(card => card.removeEventListener('click', handleFlipedCards, false));
-            console.log('Event listeners has been halted!')
+            console.log('Event listeners has been halted!');
             break;
         case "resume":
             cards.forEach(card => card.addEventListener('click', handleFlipedCards, false));
-            console.log('Event listeners has been resumed!')
+            console.log('Event listeners has been resumed!');
     }
 }
 
 function hasPlayerWon() {
   if (matches == gridSize) {
-      displayVictory();
+      document.getElementById('game-status').innerHTML = 'Well Done! &#128521'
+      reloadDocument(5000);
   }
 }
 
 function hasPlayerFailed() {
   if (moves == 0) {
-      displayFailure();
+      const cards = document.querySelectorAll('.card');
+      document.getElementById('game-status').innerHTML = 'You Failed! &#129322'
+      let doc = document.getElementById('moves-left');
+      doc.innerHTML = '<a href="https://www.benu.lv/e-aptieka/uztura-bagatinataji/smadzenu-darbibai-un-nervu-sistemai/atminai">Need supplements for improving memory? Click here!</a>'
+      cards.forEach(card => card.removeEventListener('click', handleFlipedCards));
+      reloadDocument(6000);
   }
 }
 
 function sleep (time) {
   console.log(`Sleep Mode ${time} ms.`)
   return new Promise((resolve) => setTimeout(resolve, time));
-}
-
-function displayVictory() {
-    document.getElementById('game-status').innerHTML = 'Well Done! &#128521'
-    reloadDocument(5000);
-}
-
-function displayFailure() {
-    const cards = document.querySelectorAll('.card');
-    document.getElementById('game-status').innerHTML = 'You Failed! &#129322'
-    let doc = document.getElementById('moves-left');
-    doc.innerHTML = '<a href="https://www.benu.lv/e-aptieka/uztura-bagatinataji/smadzenu-darbibai-un-nervu-sistemai/atminai">Need supplements for improving memory? Click here!</a>'
-    cards.forEach(card => card.removeEventListener('click', handleFlipedCards));
-    reloadDocument(6000);
 }
 
 function updateMoves() {
