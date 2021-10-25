@@ -1,6 +1,8 @@
 function loader() {
+    createGrid();
     const cards = document.querySelectorAll('.card');
-    cards.forEach(card => card.addEventListener('click', handleFlipedCards, false))
+    cards.forEach(card => card.addEventListener('click', handleFlipedCards, false));
+
 }
 
 const array = [
@@ -20,9 +22,7 @@ let gridSize = 16;
 let isFliped = false;
 let firstCard;
 let secondCard;
-
 shuffle(glyphs);
-console.log(glyphs);
 
 function shuffle(array) {
   array.sort(() => Math.random() - 0.5);
