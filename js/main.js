@@ -1,3 +1,4 @@
+
 function loader() {
     createGrid();
     const cards = document.querySelectorAll('.card');
