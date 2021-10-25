@@ -23,11 +23,26 @@ let gridSize = 16;
 let isFliped = false;
 let firstCard;
 let secondCard;
+
+// function shuffle(array) {
+//   array.sort(() => Math.random() - 0.5);
+// }
+
+
+// Trying out Fisher-Yates shuffle method.
+const shuffle = (array) => {
+  let element;
+  for (let i = array.length - 1; i > 0; i--) {
+    let rand = Math.floor(Math.random() * (i + 1));
+    element = array[i];
+    array[i] = array[rand];
+    array[rand] = element;
+  }
+  return array;
+}
+
 shuffle(glyphs);
 
-function shuffle(array) {
-  array.sort(() => Math.random() - 0.5);
-}
 
 function createGrid() {
   let deck = document.getElementById("deck");
